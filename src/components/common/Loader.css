@@ -1,0 +1,70 @@
+/* ============================================================
+   Loader Component Styles
+   ============================================================ */
+
+:root {
+  --loader-color: var(--color-primary-500);
+}
+
+.loader {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader__ring {
+  border-radius: 50%;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.15);
+  border-top-color: var(--loader-color);
+  animation: loader-spin 0.65s linear infinite;
+}
+
+/* ---- Sizes ---- */
+.loader--sm .loader__ring {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+.loader--md .loader__ring {
+  width: 24px;
+  height: 24px;
+  border-width: 3px;
+}
+
+.loader--lg .loader__ring {
+  width: 40px;
+  height: 40px;
+  border-width: 4px;
+}
+
+.loader--xl .loader__ring {
+  width: 56px;
+  height: 56px;
+  border-width: 5px;
+}
+
+@keyframes loader-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---- Overlay ---- */
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 17, 23, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  z-index: var(--z-overlay);
+}
+
+.loader-overlay__label {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+}

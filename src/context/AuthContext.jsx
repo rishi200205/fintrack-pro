@@ -6,7 +6,7 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
 
     const login = () => {
-        setUser({ name: "Demo User" });
+        setUser({ name: "Demo User", email: "demo@fintrack.pro" });
     };
 
     const logout = () => {

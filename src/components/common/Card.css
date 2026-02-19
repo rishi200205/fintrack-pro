@@ -1,0 +1,74 @@
+/* ============================================================
+   Card Component Styles
+   ============================================================ */
+
+.card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition:
+    transform  var(--duration-base) var(--ease-default),
+    box-shadow var(--duration-base) var(--ease-default);
+}
+
+/* ---- Padding variants ---- */
+.card--p-none .card__body { padding: 0; }
+.card--p-sm   .card__body { padding: var(--space-3); }
+
+.card--p-md .card__body { padding: var(--space-5); }
+.card--p-md .card__header,
+.card--p-md .card__footer { padding: var(--space-4) var(--space-5); }
+
+.card--p-lg .card__body { padding: var(--space-6); }
+.card--p-lg .card__header,
+.card--p-lg .card__footer { padding: var(--space-5) var(--space-6); }
+
+/* ---- Hoverable ---- */
+.card--hoverable {
+  cursor: pointer;
+}
+.card--hoverable:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ---- Bordered ---- */
+.card--bordered {
+  border: 1px solid var(--border-default);
+}
+
+/* ---- Glass ---- */
+.card--glass {
+  background: rgba(26, 29, 39, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+}
+
+/* ---- Accent border (top) ---- */
+.card--accent-primary { border-top: 3px solid var(--color-primary-500); }
+.card--accent-success { border-top: 3px solid var(--color-success-500); }
+.card--accent-danger  { border-top: 3px solid var(--color-danger-500);  }
+.card--accent-warning { border-top: 3px solid var(--color-warning-500); }
+
+/* ---- Header / Footer ---- */
+.card__header {
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card__header h2,
+.card__header h3,
+.card__header h4 {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.card__footer {
+  border-top: 1px solid var(--border-subtle);
+}

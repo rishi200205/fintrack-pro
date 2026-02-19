@@ -1,0 +1,65 @@
+/* ============================================================
+   FINTRACK PRO — Global Stylesheet Entry Point
+   ============================================================ */
+
+/* 1. Design tokens (must be first) */
+@import './styles/variables.css';
+
+/* 2. CSS Reset */
+@import './styles/reset.css';
+
+/* 3. Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ---- Global Utilities ---- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---- Amount colors ---- */
+.text-income  { color: var(--color-success-400); }
+.text-expense { color: var(--color-danger-400);  }
+.text-neutral { color: var(--text-secondary);    }
+
+/* ---- Animated skeleton loader ---- */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.skeleton {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/* ---- Fade-in entrance ---- */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.fade-in {
+  animation: fade-in var(--duration-slow) var(--ease-out) both;
+}
+
+/* ---- Slide-in from left (sidebar overlay on mobile) ---- */
+@keyframes slide-in-left {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0);     }
+}

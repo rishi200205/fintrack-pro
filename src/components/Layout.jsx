@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUser } from '../store/slices/authSlice';
+import { logoutUser } from '../store/slices/authSlice';
 import './Layout.css';
 
 /* ---- Nav items ---- */
@@ -52,8 +54,9 @@ const NAV_ITEMS = [
 
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { logout, user } = useAuth();
-  const navigate = useNavigate();
+  const dispatch  = useDispatch();
+  const user      = useSelector(selectUser);
+  const navigate  = useNavigate();
 
   // Close sidebar on Escape
   const handleKeyDown = useCallback((e) => {
@@ -71,7 +74,7 @@ export default function Layout() {
   };
 
   const handleLogout = () => {
-    logout?.();
+    dispatch(logoutUser());
     navigate('/');
   };
 

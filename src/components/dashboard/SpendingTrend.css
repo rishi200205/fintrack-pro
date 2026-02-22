@@ -1,0 +1,12 @@
+/* ============================================================
+   SpendingTrend — Monthly Bar Chart
+   ============================================================ */
+
+.spending-trend {
+  height: 220px;
+  width: 100%;
+}
+
+.spending-trend--loading {
+  height: 220px;
+}

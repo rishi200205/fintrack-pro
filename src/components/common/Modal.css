@@ -1,0 +1,112 @@
+/* ============================================================
+   Modal Component Styles
+   ============================================================ */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+  padding: var(--space-4);
+  animation: fade-backdrop var(--duration-base) var(--ease-out);
+}
+
+@keyframes fade-backdrop {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: calc(100vh - var(--space-8));
+  overflow: hidden;
+  animation: modal-pop var(--duration-slow) var(--ease-spring);
+}
+
+@keyframes modal-pop {
+  from { opacity: 0; transform: scale(0.94) translateY(12px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+
+/* ---- Sizes ---- */
+.modal--sm { max-width: 400px;  }
+.modal--md { max-width: 560px;  }
+.modal--lg { max-width: 720px;  }
+.modal--xl { max-width: 960px;  }
+
+/* ---- Header ---- */
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.modal__title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+}
+
+.modal__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  transition: background-color var(--duration-fast), color var(--duration-fast);
+  flex-shrink: 0;
+}
+.modal__close:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+.modal__close svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---- Body ---- */
+.modal__body {
+  padding: var(--space-6);
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ---- Footer ---- */
+.modal__footer {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 480px) {
+  .modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .modal {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    max-height: 90vh;
+  }
+}

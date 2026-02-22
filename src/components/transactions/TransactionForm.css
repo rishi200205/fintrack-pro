@@ -1,0 +1,220 @@
+/* ============================================================
+   TransactionForm — Add / Edit modal form
+   ============================================================ */
+
+.txn-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ── Type tabs ── */
+.txn-form__type-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  background: var(--bg-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 4px;
+}
+
+.txn-form__type-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: calc(var(--radius-lg) - 2px);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.txn-form__type-icon {
+  font-size: var(--text-base);
+  line-height: 1;
+}
+
+.txn-form__type-btn--active.txn-form__type-btn--expense {
+  background: rgba(239, 68, 68, 0.14);
+  color: #f87171;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.txn-form__type-btn--active.txn-form__type-btn--income {
+  background: rgba(34, 197, 94, 0.14);
+  color: #22c55e;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* ── API error banner ── */
+.txn-form__api-error {
+  padding: var(--space-3) var(--space-4);
+  background: rgba(239, 68, 68, 0.10);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: #f87171;
+}
+
+/* ── Field ── */
+.txn-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.txn-form__label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.txn-form__optional {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.txn-form__input {
+  width: 100%;
+  height: 40px;
+  padding: 0 var(--space-3);
+  background: var(--bg-base);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-family: inherit;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.txn-form__input:focus {
+  outline: none;
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+
+.txn-form__input::placeholder { color: var(--text-muted); }
+.txn-form__input:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.txn-form__field--error .txn-form__input {
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+.txn-form__error {
+  font-size: var(--text-xs);
+  color: #f87171;
+  margin-top: 1px;
+}
+
+/* ── Amount prefix ── */
+.txn-form__input-prefix-wrap {
+  position: relative;
+}
+
+.txn-form__prefix {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  pointer-events: none;
+}
+
+.txn-form__input--prefixed {
+  padding-left: 24px;
+}
+
+/* Remove number input arrows */
+.txn-form__input[type="number"]::-webkit-outer-spin-button,
+.txn-form__input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+.txn-form__input[type="number"] { -moz-appearance: textfield; }
+
+/* ── Textarea ── */
+.txn-form__textarea {
+  height: auto;
+  padding: var(--space-2) var(--space-3);
+  resize: vertical;
+  min-height: 60px;
+  line-height: 1.5;
+}
+
+/* ── Side-by-side row ── */
+.txn-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+/* ── Footer ── */
+.txn-form__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-subtle);
+  margin-top: var(--space-1);
+}
+
+.txn-form__btn {
+  height: 40px;
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+}
+
+.txn-form__btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.txn-form__btn--cancel {
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+}
+.txn-form__btn--cancel:hover:not(:disabled) {
+  background: var(--bg-elevated);
+}
+
+.txn-form__btn--submit.txn-form__btn--expense {
+  background: #ef4444;
+  color: #fff;
+}
+.txn-form__btn--submit.txn-form__btn--expense:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.txn-form__btn--submit.txn-form__btn--income {
+  background: #22c55e;
+  color: #fff;
+}
+.txn-form__btn--submit.txn-form__btn--income:hover:not(:disabled) {
+  background: #16a34a;
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .txn-form__row {
+    grid-template-columns: 1fr;
+  }
+
+  .txn-form__footer {
+    flex-direction: column-reverse;
+  }
+
+  .txn-form__btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

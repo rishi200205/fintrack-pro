@@ -42,6 +42,7 @@ export default function QuickChart({ byCategory = [], loading = false }) {
     maintainAspectRatio: false,
     cutout:              '72%',
     animation:           { animateRotate: true, duration: 600 },
+    layout:              { padding: 10 },
     plugins: {
       legend: { display: false },
       tooltip: {

@@ -20,14 +20,14 @@ export const CATEGORIES = [
 export const USERS = [
   {
     id:    'usr_01',
-    name:  'Alex Morgan',
-    email: 'alex@fintrack.pro',
+    name:  'Rishi Raj Jaiswal',
+    email: 'rishi@fintrack.pro',
     avatar: null,
   },
 ];
 
 export const CREDENTIALS = {
-  email:    'alex@fintrack.pro',
+  email:    'rishi@fintrack.pro',
   password: 'demo1234',
   token:    'mock_jwt_token_abc123xyz',
 };

@@ -151,7 +151,7 @@ export default function Login() {
                 name="email"
                 type="email"
                 autoComplete="email"
-                placeholder="alex@fintrack.pro"
+                placeholder="rishi@fintrack.pro"
                 value={fields.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -213,7 +213,7 @@ export default function Login() {
 
         <div className="auth-demo">
           <strong>Demo credentials</strong><br />
-          Email: <strong>alex@fintrack.pro</strong> · Password: <strong>demo1234</strong>
+          Email: <strong>rishi@fintrack.pro</strong> · Password: <strong>demo1234</strong>
         </div>
 
         <p className="auth-footer">

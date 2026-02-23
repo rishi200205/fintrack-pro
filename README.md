@@ -51,7 +51,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 | Field    | Value               |
 |----------|---------------------|
-| Email    | alex@fintrack.pro   |
+| Email    | rishi@fintrack.pro  |
 | Password | demo1234            |
 
 ---

@@ -53,6 +53,7 @@ export default function CategoryBreakdown({
     maintainAspectRatio: false,
     cutout:              '70%',
     animation:           { animateRotate: true, duration: 500 },
+    layout:              { padding: 10 },
     plugins: {
       legend: { display: false },
       tooltip: {

@@ -3,6 +3,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '../store/slices/authSlice';
 import { logoutUser } from '../store/slices/authSlice';
+import ToastContainer from './common/ToastContainer';
 import './Layout.css';
 
 /* ---- Nav items ---- */
@@ -219,6 +220,9 @@ export default function Layout() {
           </NavLink>
         ))}
       </nav>
+
+      {/* ===== Toast Notifications ===== */}
+      <ToastContainer />
     </div>
   );
 }

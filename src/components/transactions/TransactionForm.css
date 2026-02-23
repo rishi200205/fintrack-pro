@@ -203,6 +203,175 @@
   background: #16a34a;
 }
 
+/* ── Custom category label row ── */
+.txn-form__label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.txn-form__new-cat-btn {
+  background: none;
+  border: none;
+  color: var(--color-primary-400);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color var(--duration-fast);
+}
+.txn-form__new-cat-btn:hover { color: var(--color-primary-300, #93c5fd); }
+
+/* ── New category inline panel ── */
+.txn-form__new-cat-panel {
+  margin-top: var(--space-3);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  animation: fade-in var(--duration-base) var(--ease-out) both;
+}
+
+.txn-form__new-cat-heading {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.txn-form__new-cat-name {
+  /* inherits .txn-form__input */
+}
+
+.txn-form__new-cat-sublabel {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+/* ── Emoji grid ── */
+.txn-form__emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.txn-form__emoji-btn {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background: var(--bg-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--duration-fast), border-color var(--duration-fast),
+              transform var(--duration-fast);
+  padding: 0;
+  line-height: 1;
+}
+.txn-form__emoji-btn:hover:not(:disabled) {
+  background: var(--bg-overlay);
+  border-color: var(--border-strong);
+  transform: scale(1.12);
+}
+.txn-form__emoji-btn--active {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: var(--color-primary-500);
+}
+
+/* ── Color swatches ── */
+.txn-form__color-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.txn-form__color-swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform var(--duration-fast), border-color var(--duration-fast);
+  padding: 0;
+}
+.txn-form__color-swatch:hover:not(:disabled) { transform: scale(1.15); }
+.txn-form__color-swatch--active {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--bg-elevated), 0 0 0 4px currentColor;
+}
+
+/* ── Preview pill ── */
+.txn-form__new-cat-preview {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.txn-form__new-cat-preview-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.txn-form__new-cat-preview-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── New cat error ── */
+.txn-form__new-cat-error {
+  font-size: var(--text-xs);
+  color: #f87171;
+  margin: 0;
+}
+
+/* ── New cat action row ── */
+.txn-form__new-cat-actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+.txn-form__btn--sm {
+  height: 34px;
+  padding: 0 var(--space-4);
+  font-size: var(--text-xs);
+}
+
+.txn-form__btn--create {
+  background: var(--color-primary-600);
+  color: #fff;
+  border: none;
+}
+.txn-form__btn--create:hover:not(:disabled) {
+  background: var(--color-primary-500);
+}
+.txn-form__btn--create:disabled { opacity: 0.55; cursor: not-allowed; }
+
 /* ── Mobile ── */
 @media (max-width: 480px) {
   .txn-form__row {

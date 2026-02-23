@@ -55,7 +55,17 @@ mock.onDelete(/\/transactions\/.*/).reply((config) => {
 // ─── Categories ────────────────────────────────────────────────────────────
 
 mock.onGet('/categories').reply(200, categories);
-
+mock.onPost('/categories').reply((config) => {
+  const body = JSON.parse(config.data);
+  const newCat = {
+    id:    `cat_custom_${Date.now()}`,
+    name:  body.name,
+    icon:  body.icon  || '📦',
+    color: body.color || '#6366f1',
+  };
+  categories.push(newCat);
+  return [201, newCat];
+});
 // ─── Analytics ─────────────────────────────────────────────────────────────
 
 mock.onGet('/analytics/summary').reply(() => {

@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { createCategory } from '../../store/slices/categorySlice';
 import Modal from '../common/Modal';
 import './TransactionForm.css';
 
@@ -12,6 +14,19 @@ const EMPTY_FORM = {
   date:        today(),
   notes:       '',
 };
+
+const EMPTY_NEW_CAT = { name: '', icon: '📦', color: '#6366f1' };
+
+const EMOJI_OPTIONS = [
+  '🏠','🍔','🚗','🛍️','💊','🎬','⚡','💼','💻','📈',
+  '📚','📱','✈️','🎵','🍕','☕','🎮','🏋️','🐾','🎁',
+  '🧾','🏥','🎓','💡','🎨','🧳','📦','🌿',
+];
+
+const COLOR_OPTIONS = [
+  '#6366f1','#3b82f6','#06b6d4','#10b981','#22c55e',
+  '#f59e0b','#f97316','#ec4899','#8b5cf6','#ef4444',
+];
 
 /**
  * TransactionForm — Add / Edit transaction modal.
@@ -33,10 +48,18 @@ export default function TransactionForm({
 }) {
   const isEdit = Boolean(initial);
 
+  const dispatch = useDispatch();
+
   const [form,    setForm]    = useState(EMPTY_FORM);
   const [errors,  setErrors]  = useState({});
   const [loading, setLoading] = useState(false);
   const [apiErr,  setApiErr]  = useState('');
+
+  // Custom category creator state
+  const [showNewCat,    setShowNewCat]    = useState(false);
+  const [newCat,        setNewCat]        = useState(EMPTY_NEW_CAT);
+  const [newCatLoading, setNewCatLoading] = useState(false);
+  const [newCatError,   setNewCatError]   = useState('');
 
   // Populate when editing or reset when modal opens for add
   useEffect(() => {
@@ -44,6 +67,9 @@ export default function TransactionForm({
       setErrors({});
       setApiErr('');
       setLoading(false);
+      setShowNewCat(false);
+      setNewCat(EMPTY_NEW_CAT);
+      setNewCatError('');
       if (initial) {
         setForm({
           type:        initial.type,
@@ -62,6 +88,29 @@ export default function TransactionForm({
   const set = (key, val) => {
     setForm((prev) => ({ ...prev, [key]: val }));
     setErrors((prev) => ({ ...prev, [key]: '' }));
+  };
+
+  const handleCreateCategory = async () => {
+    if (!newCat.name.trim()) {
+      setNewCatError('Category name is required.');
+      return;
+    }
+    setNewCatLoading(true);
+    setNewCatError('');
+    try {
+      const result = await dispatch(createCategory({
+        name:  newCat.name.trim(),
+        icon:  newCat.icon,
+        color: newCat.color,
+      })).unwrap();
+      set('categoryId', result.id);
+      setShowNewCat(false);
+      setNewCat(EMPTY_NEW_CAT);
+    } catch {
+      setNewCatError('Failed to create category. Try again.');
+    } finally {
+      setNewCatLoading(false);
+    }
   };
 
   // Filter categories by current type intention
@@ -192,13 +241,24 @@ export default function TransactionForm({
 
         {/* ── Category ── */}
         <div className={`txn-form__field ${errors.categoryId ? 'txn-form__field--error' : ''}`}>
-          <label className="txn-form__label" htmlFor="tf-cat">Category</label>
+          <div className="txn-form__label-row">
+            <label className="txn-form__label" htmlFor="tf-cat">Category</label>
+            {!showNewCat && (
+              <button
+                type="button"
+                className="txn-form__new-cat-btn"
+                onClick={() => setShowNewCat(true)}
+              >
+                + New category
+              </button>
+            )}
+          </div>
           <select
             id="tf-cat"
             className="txn-form__input"
             value={form.categoryId}
             onChange={(e) => set('categoryId', e.target.value)}
-            disabled={loading}
+            disabled={loading || showNewCat}
           >
             <option value="">Select a category…</option>
             {filteredCats.map((c) => (
@@ -206,6 +266,93 @@ export default function TransactionForm({
             ))}
           </select>
           {errors.categoryId && <span className="txn-form__error">{errors.categoryId}</span>}
+
+          {/* ── Inline new-category panel ── */}
+          {showNewCat && (
+            <div className="txn-form__new-cat-panel">
+              <p className="txn-form__new-cat-heading">Create custom category</p>
+
+              {/* Name */}
+              <input
+                type="text"
+                className="txn-form__input txn-form__new-cat-name"
+                placeholder="Category name…"
+                value={newCat.name}
+                onChange={(e) => setNewCat((p) => ({ ...p, name: e.target.value }))}
+                autoFocus
+                disabled={newCatLoading}
+                maxLength={30}
+              />
+
+              {/* Emoji grid */}
+              <p className="txn-form__new-cat-sublabel">Pick an icon</p>
+              <div className="txn-form__emoji-grid">
+                {EMOJI_OPTIONS.map((em) => (
+                  <button
+                    key={em}
+                    type="button"
+                    className={`txn-form__emoji-btn${newCat.icon === em ? ' txn-form__emoji-btn--active' : ''}`}
+                    onClick={() => setNewCat((p) => ({ ...p, icon: em }))}
+                    disabled={newCatLoading}
+                    aria-label={em}
+                  >
+                    {em}
+                  </button>
+                ))}
+              </div>
+
+              {/* Color swatches */}
+              <p className="txn-form__new-cat-sublabel">Pick a color</p>
+              <div className="txn-form__color-swatches">
+                {COLOR_OPTIONS.map((col) => (
+                  <button
+                    key={col}
+                    type="button"
+                    className={`txn-form__color-swatch${newCat.color === col ? ' txn-form__color-swatch--active' : ''}`}
+                    style={{ background: col }}
+                    onClick={() => setNewCat((p) => ({ ...p, color: col }))}
+                    disabled={newCatLoading}
+                    aria-label={col}
+                  />
+                ))}
+              </div>
+
+              {/* Preview */}
+              <div className="txn-form__new-cat-preview">
+                <span
+                  className="txn-form__new-cat-preview-icon"
+                  style={{ background: `${newCat.color}22`, borderColor: `${newCat.color}55` }}
+                >
+                  {newCat.icon}
+                </span>
+                <span className="txn-form__new-cat-preview-name" style={{ color: newCat.color }}>
+                  {newCat.name || 'Category name'}
+                </span>
+              </div>
+
+              {newCatError && <p className="txn-form__new-cat-error">{newCatError}</p>}
+
+              {/* Actions */}
+              <div className="txn-form__new-cat-actions">
+                <button
+                  type="button"
+                  className="txn-form__btn txn-form__btn--cancel txn-form__btn--sm"
+                  onClick={() => { setShowNewCat(false); setNewCat(EMPTY_NEW_CAT); setNewCatError(''); }}
+                  disabled={newCatLoading}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="txn-form__btn txn-form__btn--create txn-form__btn--sm"
+                  onClick={handleCreateCategory}
+                  disabled={newCatLoading}
+                >
+                  {newCatLoading ? 'Creating…' : 'Create & Select'}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* ── Notes (optional) ── */}

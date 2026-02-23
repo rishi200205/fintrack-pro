@@ -1,11 +1,22 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchCategories as apiFetchCategories } from '../../api/services/categoryService';
+import { fetchCategories as apiFetchCategories, createCategory as apiCreateCategory } from '../../api/services/categoryService';
 
 export const fetchCategories = createAsyncThunk(
   'categories/fetchAll',
   async (_, { rejectWithValue }) => {
     try {
       return await apiFetchCategories();
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const createCategory = createAsyncThunk(
+  'categories/create',
+  async (payload, { rejectWithValue }) => {
+    try {
+      return await apiCreateCategory(payload);
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -33,6 +44,9 @@ const categorySlice = createSlice({
       .addCase(fetchCategories.rejected, (state, action) => {
         state.status = 'failed';
         state.error  = action.payload;
+      })
+      .addCase(createCategory.fulfilled, (state, action) => {
+        state.items.push(action.payload);
       });
   },
 });

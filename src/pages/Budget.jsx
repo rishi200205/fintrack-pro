@@ -166,6 +166,7 @@ export default function Budget() {
 
       {/* ── Form modal ── */}
       <BudgetForm
+        key={formOpen ? `${formCat?.id}-${formExisting?.limit ?? 'new'}` : 'closed'}
         isOpen={formOpen}
         onClose={closeForm}
         category={formCat}

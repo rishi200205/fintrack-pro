@@ -354,11 +354,4 @@ dist/assets/index-[hash].css   ~80 kB    gzip: ~12 kB
 
 ---
 
-<div align="center">
-
-Built with  by **Rishi Raj Jaiswal**
-
-</div>
-               | ✅     |
-| 8     | Settings, toast system, CSV export, polish  | ✅     |
 

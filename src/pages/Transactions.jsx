@@ -165,6 +165,7 @@ export default function Transactions() {
                   <TransactionItem
                     key={txn.id}
                     transaction={txn}
+                    displayCurrency={displayCurrency}
                     onEdit={openEdit}
                     onDelete={handleDelete}
                     deleting={deletingId === txn.id}

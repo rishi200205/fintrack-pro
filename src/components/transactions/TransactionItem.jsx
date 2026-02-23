@@ -1,4 +1,4 @@
-import { formatCurrency } from '../../utils/currency';
+import { formatCurrency, convertAmount } from '../../utils/currency';
 import './TransactionItem.css';
 
 const fmtDate = (d) =>
@@ -11,9 +11,10 @@ const fmtDate = (d) =>
 /**
  * TransactionItem — single transaction row with edit/delete on hover.
  */
-export default function TransactionItem({ transaction: t, onEdit, onDelete, deleting }) {
+export default function TransactionItem({ transaction: t, displayCurrency = 'USD', onEdit, onDelete, deleting }) {
   const cat       = t.category;
   const isIncome  = t.type === 'income';
+  const displayAmount = convertAmount(t.amount, t.currency ?? 'USD', displayCurrency);
 
   return (
     <li className={`txn-item ${deleting ? 'txn-item--deleting' : ''}`}>
@@ -44,8 +45,8 @@ export default function TransactionItem({ transaction: t, onEdit, onDelete, dele
 
       {/* Amount */}
       <span className={`txn-item__amount txn-item__amount--${t.type}`}>
-        {isIncome ? '+' : '−'}{formatCurrency(t.amount, t.currency ?? 'USD')}
-        {t.currency && t.currency !== 'USD' && (
+        {isIncome ? '+' : '−'}{formatCurrency(displayAmount, displayCurrency)}
+        {t.currency && t.currency !== displayCurrency && (
           <span className="txn-item__currency-badge">{t.currency}</span>
         )}
       </span>

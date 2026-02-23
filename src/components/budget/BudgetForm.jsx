@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Modal from '../common/Modal';
 import './BudgetForm.css';
 
@@ -17,17 +17,9 @@ const QUICK_AMOUNTS = [100, 200, 300, 500, 750, 1000];
  * @param {Function} onSave     — (categoryId, limit, period) => void
  */
 export default function BudgetForm({ isOpen, onClose, category, existing, onSave }) {
-  const [limit,  setLimit]  = useState('');
-  const [period, setPeriod] = useState('monthly');
+  const [limit,  setLimit]  = useState(existing?.limit ? String(existing.limit) : '');
+  const [period, setPeriod] = useState(existing?.period ?? 'monthly');
   const [error,  setError]  = useState('');
-
-  useEffect(() => {
-    if (isOpen) {
-      setError('');
-      setLimit(existing?.limit ? String(existing.limit) : '');
-      setPeriod(existing?.period ?? 'monthly');
-    }
-  }, [isOpen, existing]);
 
   const handleLimit = (val) => {
     setLimit(val);

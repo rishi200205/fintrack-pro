@@ -1,0 +1,234 @@
+/* ============================================================
+   CategoryBreakdown — doughnut + ranked list
+   ============================================================ */
+
+.cat-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Type toggle ── */
+.cat-breakdown__toggle {
+  display: flex;
+  gap: var(--space-2);
+  background: var(--bg-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 3px;
+  align-self: flex-start;
+}
+
+.cat-breakdown__toggle-btn {
+  padding: var(--space-1) var(--space-4);
+  border: none;
+  border-radius: calc(var(--radius-md) - 2px);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.cat-breakdown__toggle-btn:hover:not(.cat-breakdown__toggle-btn--active) {
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+}
+
+.cat-breakdown__toggle-btn--active {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.cat-breakdown__toggle-btn--active.cat-breakdown__toggle-btn--expense {
+  color: #f87171;
+}
+
+.cat-breakdown__toggle-btn--active.cat-breakdown__toggle-btn--income {
+  color: #22c55e;
+}
+
+/* ── Main layout: donut left, list right ── */
+.cat-breakdown__content {
+  display: flex;
+  gap: var(--space-5);
+  align-items: flex-start;
+  flex: 1;
+}
+
+/* ── Doughnut ── */
+.cat-breakdown__donut-wrap {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  flex-shrink: 0;
+}
+
+.cat-breakdown__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  pointer-events: none;
+}
+
+.cat-breakdown__center-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.cat-breakdown__center-value {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.cat-breakdown__center-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* ── Ranked list ── */
+.cat-breakdown__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+
+.cat-breakdown__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.cat-breakdown__rank {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 14px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.cat-breakdown__icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+}
+
+.cat-breakdown__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cat-breakdown__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.cat-breakdown__name {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cat-breakdown__amt {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.cat-breakdown__bar-track {
+  height: 4px;
+  background: var(--bg-elevated);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.cat-breakdown__bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+  min-width: 2px;
+}
+
+.cat-breakdown__pct {
+  font-size: 10px;
+  font-weight: 700;
+  width: 30px;
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Loading state ── */
+.cat-breakdown__loading {
+  display: flex;
+  gap: var(--space-5);
+  align-items: flex-start;
+}
+
+.cat-breakdown__skeleton-ring {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cat-breakdown__skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ── Empty state ── */
+.cat-breakdown__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-8) 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.cat-breakdown__empty span {
+  font-size: 36px;
+  line-height: 1;
+}

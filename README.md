@@ -48,6 +48,7 @@ and the theme preference is saved to `localStorage`.
 - Interactive charts (Line, Doughnut, Bar) with hover tooltips
 - Dark & light themes switchable from the topbar or Settings page
 - CSV export, toast notification system, responsive mobile layout
+- Custom SVG favicon and branded page title
 
 ---
 
@@ -160,6 +161,7 @@ Both fields are pre-filled on the login page for convenience.
 ```
 fintrack-pro/
  public/
+    fintrack.svg              # Custom app favicon (indigo bar-chart + trend arrow)
  src/
     api/
        apiClient.js              # Axios instance

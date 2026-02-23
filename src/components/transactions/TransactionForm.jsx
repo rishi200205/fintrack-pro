@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createCategory } from '../../store/slices/categorySlice';
+import { selectCurrency } from '../../store/slices/uiSlice';
+import { CURRENCIES, getCurrency } from '../../utils/currency';
 import Modal from '../common/Modal';
 import './TransactionForm.css';
 
@@ -10,6 +12,7 @@ const EMPTY_FORM = {
   type:        'expense',
   description: '',
   amount:      '',
+  currency:    '',          // filled from baseCurrency prop on mount
   categoryId:  '',
   date:        today(),
   notes:       '',
@@ -49,7 +52,7 @@ export default function TransactionForm({
   const isEdit = Boolean(initial);
 
   const dispatch = useDispatch();
-
+  const globalCurrency = useSelector(selectCurrency);
   const [form,    setForm]    = useState(EMPTY_FORM);
   const [errors,  setErrors]  = useState({});
   const [loading, setLoading] = useState(false);
@@ -75,15 +78,16 @@ export default function TransactionForm({
           type:        initial.type,
           description: initial.description,
           amount:      String(initial.amount),
+          currency:    initial.currency ?? globalCurrency,
           categoryId:  initial.categoryId,
           date:        initial.date,
           notes:       initial.notes ?? '',
         });
       } else {
-        setForm(EMPTY_FORM);
+        setForm({ ...EMPTY_FORM, currency: globalCurrency });
       }
     }
-  }, [isOpen, initial]);
+  }, [isOpen, initial, globalCurrency]);
 
   const set = (key, val) => {
     setForm((prev) => ({ ...prev, [key]: val }));
@@ -140,6 +144,7 @@ export default function TransactionForm({
       type:        form.type,
       description: form.description.trim(),
       amount:      parseFloat(form.amount),
+      currency:    form.currency || globalCurrency,
       categoryId:  form.categoryId,
       date:        form.date,
       notes:       form.notes.trim() || undefined,
@@ -204,12 +209,12 @@ export default function TransactionForm({
           {errors.description && <span className="txn-form__error">{errors.description}</span>}
         </div>
 
-        {/* ── Amount + Date (side by side) ── */}
-        <div className="txn-form__row">
+        {/* ── Amount + Currency + Date (⅓ + ⅓ + ⅓) ── */}
+        <div className="txn-form__row txn-form__row--three">
           <div className={`txn-form__field ${errors.amount ? 'txn-form__field--error' : ''}`}>
             <label className="txn-form__label" htmlFor="tf-amount">Amount</label>
             <div className="txn-form__input-prefix-wrap">
-              <span className="txn-form__prefix">$</span>
+              <span className="txn-form__prefix">{getCurrency(form.currency || globalCurrency).symbol}</span>
               <input
                 id="tf-amount"
                 type="number"
@@ -223,6 +228,23 @@ export default function TransactionForm({
               />
             </div>
             {errors.amount && <span className="txn-form__error">{errors.amount}</span>}
+          </div>
+
+          <div className="txn-form__field">
+            <label className="txn-form__label" htmlFor="tf-currency">Currency</label>
+            <select
+              id="tf-currency"
+              className="txn-form__input txn-form__select--currency"
+              value={form.currency || globalCurrency}
+              onChange={(e) => set('currency', e.target.value)}
+              disabled={loading}
+            >
+              {CURRENCIES.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.flag} {c.code} — {c.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className={`txn-form__field ${errors.date ? 'txn-form__field--error' : ''}`}>

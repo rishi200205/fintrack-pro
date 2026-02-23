@@ -140,3 +140,18 @@
     padding: var(--space-3);
   }
 }
+
+/* ── Currency badge (shown when not USD) ── */
+.txn-item__currency-badge {
+  display: inline-block;
+  margin-left: var(--space-1);
+  padding: 1px 5px;
+  font-size: 10px;
+  font-weight: var(--font-bold);
+  letter-spacing: 0.04em;
+  border-radius: var(--radius-sm);
+  background: var(--bg-overlay);
+  color: var(--text-muted);
+  vertical-align: middle;
+  border: 1px solid var(--border-subtle);
+}

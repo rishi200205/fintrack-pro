@@ -5,12 +5,10 @@ import {
   ArcElement,
   Tooltip,
 } from 'chart.js';
+import { formatCurrencyCompact } from '../../utils/currency';
 import './CategoryBreakdown.css';
 
 ChartJS.register(ArcElement, Tooltip);
-
-const fmt = (n) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 
 const pct = (part, total) =>
   total > 0 ? Math.round((part / total) * 100) : 0;
@@ -20,13 +18,16 @@ const pct = (part, total) =>
  *
  * @param {Array}   expByCategory — [{ id, name, icon, color, value }]
  * @param {Array}   incByCategory — [{ id, name, icon, color, value }]
+ * @param {string}  currency      — ISO 4217 display currency code
  * @param {boolean} loading
  */
 export default function CategoryBreakdown({
   expByCategory = [],
   incByCategory = [],
+  currency = 'USD',
   loading = false,
 }) {
+  const fmt = (n) => formatCurrencyCompact(n, currency);
   const [mode, setMode] = useState('expense');
 
   const items = useMemo(

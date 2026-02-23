@@ -1,3 +1,4 @@
+import { formatCurrency } from '../../utils/currency';
 import './BalanceCard.css';
 
 const IconTrendUp = () => (
@@ -31,10 +32,6 @@ const IconArrowDown = () => (
     <polyline points="19 12 12 19 5 12" />
   </svg>
 );
-
-const fmt = (n) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n);
-
 /**
  * BalanceCard — displays one metric (balance / income / expense / savings)
  *
@@ -42,9 +39,10 @@ const fmt = (n) =>
  * @param {number}  value
  * @param {number}  [change]      - month-over-month delta
  * @param {string}  [label]       - override default label
+ * @param {string}  [currency]    - ISO 4217 currency code (default 'USD')
  * @param {boolean} [loading]
  */
-export default function BalanceCard({ type = 'balance', value = 0, change, label, loading = false }) {
+export default function BalanceCard({ type = 'balance', value = 0, change, label, currency = 'USD', loading = false }) {
   const config = {
     balance:  { label: 'Net Balance',      accent: 'primary', Icon: IconWallet,    sign: null          },
     income:   { label: 'Total Income',     accent: 'success', Icon: IconArrowUp,   sign: 'positive'    },
@@ -55,7 +53,9 @@ export default function BalanceCard({ type = 'balance', value = 0, change, label
   const displayLabel = label ?? config.label;
   const { accent, Icon, sign } = config;
 
-  const displayValue = sign === 'percentage' ? `${value}%` : fmt(value);
+  const displayValue = sign === 'percentage'
+    ? `${value}%`
+    : formatCurrency(value, currency);
 
   const isPositiveChange = change !== undefined && change >= 0;
   const changeAbs = change !== undefined ? Math.abs(change) : 0;
@@ -76,7 +76,7 @@ export default function BalanceCard({ type = 'balance', value = 0, change, label
       {change !== undefined && !loading && (
         <div className={`balance-card__change balance-card__change--${isPositiveChange ? 'up' : 'down'}`}>
           {isPositiveChange ? <IconTrendUp /> : <IconTrendDown />}
-          <span>{isPositiveChange ? '+' : '-'}{fmt(changeAbs)} this month</span>
+          <span>{isPositiveChange ? '+' : '-'}{formatCurrency(changeAbs, currency)} this month</span>
         </div>
       )}
 

@@ -1,10 +1,11 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { selectUser, logoutUser }             from '../store/slices/authSlice';
-import { selectTheme, toggleTheme, addToast } from '../store/slices/uiSlice';
+import { selectTheme, toggleTheme, addToast, setCurrency, selectCurrency } from '../store/slices/uiSlice';
 import { selectAllTransactions }              from '../store/slices/transactionSlice';
 import { selectCategories }                   from '../store/slices/categorySlice';
 import { exportTransactionsCsv }              from '../utils/exportCsv';
+import { CURRENCIES, getCurrency }            from '../utils/currency';
 import './Settings.css';
 
 /* ─── Helpers ─────────────────────────────────────────────────── */
@@ -146,6 +147,39 @@ function DataCard({ onExport, onReset }) {
   );
 }
 
+function CurrencyCard({ currency, onChange }) {
+  const current = getCurrency(currency);
+  return (
+    <div className="settings__card">
+      <SectionHeader
+        title="Currency"
+        description="Choose your base display currency. All totals and charts convert to this currency using mock rates."
+      />
+      <div className="settings__currency-current">
+        <span className="settings__currency-flag">{current.flag}</span>
+        <div>
+          <p className="settings__currency-name">{current.name}</p>
+          <p className="settings__currency-code">{current.symbol} &middot; {current.code}</p>
+        </div>
+      </div>
+      <div className="settings__currency-grid">
+        {CURRENCIES.map((c) => (
+          <button
+            key={c.code}
+            className={`settings__currency-btn${currency === c.code ? ' settings__currency-btn--active' : ''}`}
+            onClick={() => onChange(c.code)}
+            aria-pressed={currency === c.code}
+          >
+            <span className="settings__currency-btn-flag">{c.flag}</span>
+            <span className="settings__currency-btn-code">{c.code}</span>
+            <span className="settings__currency-btn-sym">{c.symbol}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function DangerCard({ onSignOut }) {
   return (
     <div className="settings__card settings__card--danger">
@@ -176,6 +210,7 @@ export default function Settings() {
   const navigate      = useNavigate();
   const user          = useSelector(selectUser);
   const theme         = useSelector(selectTheme);
+  const currency      = useSelector(selectCurrency);
   const transactions  = useSelector(selectAllTransactions);
   const categories    = useSelector(selectCategories);
 
@@ -183,6 +218,13 @@ export default function Settings() {
     dispatch(toggleTheme());
     const next = theme === 'dark' ? 'light' : 'dark';
     dispatch(addToast({ type: 'success', message: `Switched to ${next} theme.` }));
+  };
+
+  const handleCurrencyChange = (code) => {
+    if (code === currency) return;
+    dispatch(setCurrency(code));
+    const cur = getCurrency(code);
+    dispatch(addToast({ type: 'success', message: `Display currency changed to ${cur.name} (${cur.code}).` }));
   };
 
   const handleExport = () => {
@@ -213,6 +255,7 @@ export default function Settings() {
       <div className="settings__grid">
         <ProfileCard user={user} />
         <AppearanceCard theme={theme} onToggle={handleToggleTheme} />
+        <CurrencyCard currency={currency} onChange={handleCurrencyChange} />
         <DataCard onExport={handleExport} onReset={handleReset} />
         <DangerCard onSignOut={handleSignOut} />
       </div>

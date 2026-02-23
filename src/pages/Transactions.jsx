@@ -2,15 +2,14 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTransactions, selectTransactionStatus } from '../store/slices/transactionSlice';
 import { fetchCategories, selectCategoriesStatus } from '../store/slices/categorySlice';
+import { selectCurrency } from '../store/slices/uiSlice';
+import { formatCurrencyCompact, convertAmount } from '../utils/currency';
 import { useTransactions } from '../hooks/useTransactions';
 import TransactionFilters from '../components/transactions/TransactionFilters';
 import TransactionItem    from '../components/transactions/TransactionItem';
 import TransactionForm    from '../components/transactions/TransactionForm';
 import Loader from '../components/common/Loader';
 import './Transactions.css';
-
-const fmt = (n) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 
 const fmtGroupDate = (dateStr) => {
   const d = new Date(dateStr + 'T00:00:00');
@@ -26,6 +25,7 @@ export default function Transactions() {
   const dispatch   = useDispatch();
   const txnStatus  = useSelector(selectTransactionStatus);
   const catStatus  = useSelector(selectCategoriesStatus);
+  const displayCurrency = useSelector(selectCurrency);
 
   // Fetch on mount
   useEffect(() => {
@@ -95,18 +95,18 @@ export default function Transactions() {
       <div className="txn-page__stats">
         <div className="txn-page__stat txn-page__stat--income">
           <span className="txn-page__stat-label">↑ Income</span>
-          <span className="txn-page__stat-value">{isLoading ? '—' : fmt(stats.income)}</span>
+          <span className="txn-page__stat-value">{isLoading ? '—' : formatCurrencyCompact(stats.income, displayCurrency)}</span>
         </div>
         <div className="txn-page__stat-divider" />
         <div className="txn-page__stat txn-page__stat--expense">
           <span className="txn-page__stat-label">↓ Expenses</span>
-          <span className="txn-page__stat-value">{isLoading ? '—' : fmt(stats.expense)}</span>
+          <span className="txn-page__stat-value">{isLoading ? '—' : formatCurrencyCompact(stats.expense, displayCurrency)}</span>
         </div>
         <div className="txn-page__stat-divider" />
         <div className={`txn-page__stat txn-page__stat--net ${stats.net >= 0 ? 'txn-page__stat--net-pos' : 'txn-page__stat--net-neg'}`}>
           <span className="txn-page__stat-label">Net Balance</span>
           <span className="txn-page__stat-value">
-            {isLoading ? '—' : `${stats.net >= 0 ? '+' : ''}${fmt(stats.net)}`}
+            {isLoading ? '—' : `${stats.net >= 0 ? '+' : ''}${formatCurrencyCompact(stats.net, displayCurrency)}`}
           </span>
         </div>
       </div>
@@ -146,14 +146,14 @@ export default function Transactions() {
                 <span className="txn-page__group-date">{fmtGroupDate(date)}</span>
                 <span className="txn-page__group-line" />
                 <span className="txn-page__group-summary">
-                  {items.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0) > 0 && (
+                  {items.filter(t => t.type === 'income').reduce((s, t) => s + convertAmount(t.amount, t.currency ?? 'USD', displayCurrency), 0) > 0 && (
                     <span className="txn-page__group-income">
-                      +{fmt(items.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0))}
+                      +{formatCurrencyCompact(items.filter(t => t.type === 'income').reduce((s, t) => s + convertAmount(t.amount, t.currency ?? 'USD', displayCurrency), 0), displayCurrency)}
                     </span>
                   )}
-                  {items.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0) > 0 && (
+                  {items.filter(t => t.type === 'expense').reduce((s, t) => s + convertAmount(t.amount, t.currency ?? 'USD', displayCurrency), 0) > 0 && (
                     <span className="txn-page__group-expense">
-                      −{fmt(items.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0))}
+                      −{formatCurrencyCompact(items.filter(t => t.type === 'expense').reduce((s, t) => s + convertAmount(t.amount, t.currency ?? 'USD', displayCurrency), 0), displayCurrency)}
                     </span>
                   )}
                 </span>

@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom';
+import { formatCurrency } from '../../utils/currency';
 import './RecentTransactions.css';
-
-const fmt = (n) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n);
 
 const fmtDate = (iso) => {
   const d = new Date(iso + 'T00:00:00');
@@ -66,7 +64,7 @@ export default function RecentTransactions({ transactions = [], loading = false 
 
             {/* Amount */}
             <span className={`recent-txns__amount ${isIncome ? 'recent-txns__amount--income' : 'recent-txns__amount--expense'}`}>
-              {isIncome ? '+' : '-'}{fmt(txn.amount)}
+              {isIncome ? '+' : '-'}{formatCurrency(txn.amount, txn.currency ?? 'USD')}
             </span>
           </li>
         );

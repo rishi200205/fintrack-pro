@@ -1,12 +1,5 @@
+import { formatCurrency } from '../../utils/currency';
 import './TransactionItem.css';
-
-const fmt = (n) =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(n);
 
 const fmtDate = (d) =>
   new Date(d + 'T00:00:00').toLocaleDateString('en-US', {
@@ -51,7 +44,10 @@ export default function TransactionItem({ transaction: t, onEdit, onDelete, dele
 
       {/* Amount */}
       <span className={`txn-item__amount txn-item__amount--${t.type}`}>
-        {isIncome ? '+' : '−'}{fmt(t.amount)}
+        {isIncome ? '+' : '−'}{formatCurrency(t.amount, t.currency ?? 'USD')}
+        {t.currency && t.currency !== 'USD' && (
+          <span className="txn-item__currency-badge">{t.currency}</span>
+        )}
       </span>
 
       {/* Actions (visible on hover) */}

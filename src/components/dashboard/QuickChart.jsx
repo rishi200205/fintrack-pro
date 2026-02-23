@@ -5,12 +5,10 @@ import {
   ArcElement,
   Tooltip,
 } from 'chart.js';
+import { formatCurrencyCompact } from '../../utils/currency';
 import './QuickChart.css';
 
 ChartJS.register(ArcElement, Tooltip);
-
-const fmt = (n) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 
 const pct = (part, total) =>
   total > 0 ? Math.round((part / total) * 100) : 0;
@@ -18,9 +16,11 @@ const pct = (part, total) =>
 /**
  * QuickChart — Redesigned doughnut with side-by-side legend.
  * @param {Array}   byCategory  — [{ id, name, color, spent }]
+ * @param {string}  currency    — ISO 4217 display currency code
  * @param {boolean} loading
  */
-export default function QuickChart({ byCategory = [], loading = false }) {
+export default function QuickChart({ byCategory = [], currency = 'USD', loading = false }) {
+  const fmt = (n) => formatCurrencyCompact(n, currency);
   const top = useMemo(() => byCategory.slice(0, 6), [byCategory]);
   const total = useMemo(() => top.reduce((s, c) => s + c.spent, 0), [top]);
 

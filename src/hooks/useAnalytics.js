@@ -2,24 +2,32 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectAllTransactions } from '../store/slices/transactionSlice';
 import { selectCategories } from '../store/slices/categorySlice';
+import { selectCurrency } from '../store/slices/uiSlice';
+import { convertAmount } from '../utils/currency';
 
 /**
  * useAnalytics — memoized derivations of transaction data.
+ * All monetary values are converted to the user's selected display currency.
  * Returns totals, per-category breakdown, monthly trend, and recent transactions.
  */
 export function useAnalytics({ months = 6 } = {}) {
-  const transactions = useSelector(selectAllTransactions);
-  const categories   = useSelector(selectCategories);
+  const transactions  = useSelector(selectAllTransactions);
+  const categories    = useSelector(selectCategories);
+  const displayCurrency = useSelector(selectCurrency);
 
   return useMemo(() => {
+    // Helper: convert a transaction's amount to the display currency
+    const toDisplay = (t) =>
+      convertAmount(t.amount, t.currency ?? 'USD', displayCurrency);
+
     // ── Totals ──────────────────────────────────────────────────────────
     const totalIncome  = transactions
       .filter((t) => t.type === 'income')
-      .reduce((s, t) => s + t.amount, 0);
+      .reduce((s, t) => s + toDisplay(t), 0);
 
     const totalExpense = transactions
       .filter((t) => t.type === 'expense')
-      .reduce((s, t) => s + t.amount, 0);
+      .reduce((s, t) => s + toDisplay(t), 0);
 
     const netBalance = totalIncome - totalExpense;
 
@@ -33,11 +41,11 @@ export function useAnalytics({ months = 6 } = {}) {
 
     const monthIncome = transactions
       .filter((t) => t.type === 'income' && t.date.startsWith(thisMonth))
-      .reduce((s, t) => s + t.amount, 0);
+      .reduce((s, t) => s + toDisplay(t), 0);
 
     const monthExpense = transactions
       .filter((t) => t.type === 'expense' && t.date.startsWith(thisMonth))
-      .reduce((s, t) => s + t.amount, 0);
+      .reduce((s, t) => s + toDisplay(t), 0);
 
     // ── Category breakdown ───────────────────────────────────────────────
     const catMap = Object.fromEntries(categories.map((c) => [c.id, c]));
@@ -46,7 +54,7 @@ export function useAnalytics({ months = 6 } = {}) {
       .map((cat) => {
         const spent = transactions
           .filter((t) => t.type === 'expense' && t.categoryId === cat.id)
-          .reduce((s, t) => s + t.amount, 0);
+          .reduce((s, t) => s + toDisplay(t), 0);
         return { ...cat, spent };
       })
       .filter((c) => c.spent > 0)
@@ -62,8 +70,8 @@ export function useAnalytics({ months = 6 } = {}) {
       monthly.push({
         month:   mm,
         label,
-        income:  monthTxns.filter((t) => t.type === 'income').reduce((s, t) => s + t.amount, 0),
-        expense: monthTxns.filter((t) => t.type === 'expense').reduce((s, t) => s + t.amount, 0),
+        income:  monthTxns.filter((t) => t.type === 'income').reduce((s, t) => s + toDisplay(t), 0),
+        expense: monthTxns.filter((t) => t.type === 'expense').reduce((s, t) => s + toDisplay(t), 0),
       });
     }
 
@@ -84,6 +92,7 @@ export function useAnalytics({ months = 6 } = {}) {
       monthly,
       recent,
       transactionCount: transactions.length,
+      displayCurrency,
     };
-  }, [transactions, categories, months]);
+  }, [transactions, categories, months, displayCurrency]);
 }

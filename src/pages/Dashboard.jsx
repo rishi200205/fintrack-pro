@@ -39,6 +39,7 @@ export default function Dashboard() {
     byCategory,
     monthly,
     recent,
+    displayCurrency,
   } = useAnalytics();
 
   const hour  = new Date().getHours();
@@ -60,10 +61,10 @@ export default function Dashboard() {
 
       {/* ── Balance cards ── */}
       <div className="dashboard__cards">
-        <BalanceCard type="balance" value={netBalance}    loading={loading} />
-        <BalanceCard type="income"  value={totalIncome}   loading={loading} change={monthIncome}  />
-        <BalanceCard type="expense" value={totalExpense}  loading={loading} change={monthExpense} />
-        <BalanceCard type="savings" value={savingsRate}   loading={loading} />
+        <BalanceCard type="balance" value={netBalance}    currency={displayCurrency} loading={loading} />
+        <BalanceCard type="income"  value={totalIncome}   currency={displayCurrency} loading={loading} change={monthIncome}  />
+        <BalanceCard type="expense" value={totalExpense}  currency={displayCurrency} loading={loading} change={monthExpense} />
+        <BalanceCard type="savings" value={savingsRate}   currency={displayCurrency} loading={loading} />
       </div>
 
       {/* ── Charts row ── */}
@@ -74,7 +75,7 @@ export default function Dashboard() {
           header={<h3>Monthly Overview</h3>}
           padding="md"
         >
-          <SpendingTrend monthly={monthly} loading={loading} />
+          <SpendingTrend monthly={monthly} currency={displayCurrency} loading={loading} />
         </Card>
 
         {/* Category pie */}
@@ -83,7 +84,7 @@ export default function Dashboard() {
           header={<h3>Spending by Category</h3>}
           padding="md"
         >
-          <QuickChart byCategory={byCategory} loading={loading} />
+          <QuickChart byCategory={byCategory} currency={displayCurrency} loading={loading} />
         </Card>
       </div>
 

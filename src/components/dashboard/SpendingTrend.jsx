@@ -8,26 +8,25 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { formatCurrencyCompact, getCurrency } from '../../utils/currency';
 import './SpendingTrend.css';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-const fmt = (n) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
-
-// Fixed: properly formats values at all magnitudes
-const fmtAxis = (v) => {
-  if (v === 0) return '$0';
-  if (v >= 1000) return `$${(v / 1000).toFixed(0)}k`;
-  return `$${v}`;
-};
-
 /**
  * SpendingTrend — grouped bar chart of income vs expense per month.
- * @param {Array}   monthly — [{ label, income, expense }]
+ * @param {Array}   monthly  — [{ label, income, expense }]
+ * @param {string}  currency — ISO 4217 display currency code
  * @param {boolean} loading
  */
-export default function SpendingTrend({ monthly = [], loading = false }) {
+export default function SpendingTrend({ monthly = [], currency = 'USD', loading = false }) {
+  const fmt  = (n) => formatCurrencyCompact(n, currency);
+  const sym  = getCurrency(currency).symbol;
+  const fmtAxis = (v) => {
+    if (v === 0) return `${sym}0`;
+    if (v >= 1000) return `${sym}${(v / 1000).toFixed(0)}k`;
+    return `${sym}${v}`;
+  };
   // Totals for the period summary row
   const totals = useMemo(() => {
     const inc = monthly.reduce((s, m) => s + m.income, 0);

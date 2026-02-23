@@ -2,6 +2,8 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectAllTransactions } from '../store/slices/transactionSlice';
 import { selectCategories }       from '../store/slices/categorySlice';
+import { selectCurrency }         from '../store/slices/uiSlice';
+import { convertAmount }          from '../utils/currency';
 
 /**
  * useAnalyticsPage
@@ -13,10 +15,14 @@ import { selectCategories }       from '../store/slices/categorySlice';
  * @param {number} period — number of months to include (1 | 3 | 6 | 12)
  */
 export function useAnalyticsPage(period = 6) {
-  const transactions = useSelector(selectAllTransactions);
-  const categories   = useSelector(selectCategories);
+  const transactions    = useSelector(selectAllTransactions);
+  const categories      = useSelector(selectCategories);
+  const displayCurrency = useSelector(selectCurrency);
 
   return useMemo(() => {
+    // Helper: convert a transaction's amount to the display currency
+    const toDisplay = (t) => convertAmount(t.amount, t.currency ?? 'USD', displayCurrency);
+
     const now    = new Date();
     // Start of the earliest month included in the period
     const cutoff = new Date(now.getFullYear(), now.getMonth() - (period - 1), 1);
@@ -26,11 +32,11 @@ export function useAnalyticsPage(period = 6) {
     // ── Period totals ──────────────────────────────────────────────────────
     const totalIncome = periodTxns
       .filter((t) => t.type === 'income')
-      .reduce((s, t) => s + t.amount, 0);
+      .reduce((s, t) => s + toDisplay(t), 0);
 
     const totalExpense = periodTxns
       .filter((t) => t.type === 'expense')
-      .reduce((s, t) => s + t.amount, 0);
+      .reduce((s, t) => s + toDisplay(t), 0);
 
     const netSavings  = totalIncome - totalExpense;
     const savingsRate = totalIncome > 0
@@ -47,8 +53,8 @@ export function useAnalyticsPage(period = 6) {
         ...(period >= 12 ? { year: '2-digit' } : {}),
       });
       const monthTxns = periodTxns.filter((t) => t.date.startsWith(mm));
-      const income    = monthTxns.filter((t) => t.type === 'income') .reduce((s, t) => s + t.amount, 0);
-      const expense   = monthTxns.filter((t) => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+      const income    = monthTxns.filter((t) => t.type === 'income') .reduce((s, t) => s + toDisplay(t), 0);
+      const expense   = monthTxns.filter((t) => t.type === 'expense').reduce((s, t) => s + toDisplay(t), 0);
       monthly.push({ month: mm, label, income, expense, net: income - expense });
     }
 
@@ -69,7 +75,7 @@ export function useAnalyticsPage(period = 6) {
       .map((cat) => {
         const spent = periodTxns
           .filter((t) => t.type === 'expense' && t.categoryId === cat.id)
-          .reduce((s, t) => s + t.amount, 0);
+          .reduce((s, t) => s + toDisplay(t), 0);
         return { ...cat, value: spent };
       })
       .filter((c) => c.value > 0)
@@ -79,7 +85,7 @@ export function useAnalyticsPage(period = 6) {
       .map((cat) => {
         const earned = periodTxns
           .filter((t) => t.type === 'income' && t.categoryId === cat.id)
-          .reduce((s, t) => s + t.amount, 0);
+          .reduce((s, t) => s + toDisplay(t), 0);
         return { ...cat, value: earned };
       })
       .filter((c) => c.value > 0)
@@ -100,6 +106,7 @@ export function useAnalyticsPage(period = 6) {
       worstMonth,
       avgMonthlyExpense,
       txnCount: periodTxns.length,
+      displayCurrency,
     };
-  }, [transactions, categories, period]);
+  }, [transactions, categories, period, displayCurrency]);
 }

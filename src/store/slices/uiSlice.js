@@ -1,16 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const loadTheme = () => localStorage.getItem('ft_theme') || 'dark';
+const loadTheme    = () => localStorage.getItem('ft_theme')    || 'dark';
+const loadCurrency = () => localStorage.getItem('ft_currency') || 'USD';
 
 const uiSlice = createSlice({
   name: 'ui',
   initialState: {
-    theme:          loadTheme(),   // 'dark' | 'light'
-    sidebarOpen:    false,         // mobile sidebar drawer state
-    activeModal:    null,          // string key of the currently open modal
-    modalPayload:   null,          // data passed to the modal
+    theme:          loadTheme(),      // 'dark' | 'light'
+    currency:       loadCurrency(),   // ISO 4217 code e.g. 'USD', 'EUR'
+    sidebarOpen:    false,            // mobile sidebar drawer state
+    activeModal:    null,             // string key of the currently open modal
+    modalPayload:   null,             // data passed to the modal
     isGlobalLoading: false,
-    toasts:         [],            // { id, type, message }
+    toasts:         [],               // { id, type, message }
   },
   reducers: {
     setTheme(state, action) {
@@ -23,6 +25,10 @@ const uiSlice = createSlice({
       state.theme = next;
       localStorage.setItem('ft_theme', next);
       document.documentElement.setAttribute('data-theme', next);
+    },
+    setCurrency(state, action) {
+      state.currency = action.payload;
+      localStorage.setItem('ft_currency', action.payload);
     },
     setSidebarOpen(state, action) {
       state.sidebarOpen = action.payload;
@@ -57,6 +63,7 @@ const uiSlice = createSlice({
 export const {
   setTheme,
   toggleTheme,
+  setCurrency,
   setSidebarOpen,
   toggleSidebar,
   openModal,
@@ -68,6 +75,7 @@ export const {
 
 // ─── Selectors ─────────────────────────────────────────────────────────────
 export const selectTheme         = (state) => state.ui.theme;
+export const selectCurrency      = (state) => state.ui.currency;
 export const selectSidebarOpen   = (state) => state.ui.sidebarOpen;
 export const selectActiveModal   = (state) => state.ui.activeModal;
 export const selectModalPayload  = (state) => state.ui.modalPayload;

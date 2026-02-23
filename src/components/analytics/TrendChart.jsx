@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { formatCurrencyCompact, getCurrency } from '../../utils/currency';
 import './TrendChart.css';
 
 ChartJS.register(
@@ -18,22 +19,21 @@ ChartJS.register(
   Filler, Tooltip, Legend,
 );
 
-const fmt = (n) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
-
-const fmtAxis = (v) => {
-  if (v === 0) return '$0';
-  if (v >= 1000) return `$${(v / 1000).toFixed(0)}k`;
-  return `$${v}`;
-};
-
 /**
  * TrendChart — line chart of income vs expense with net savings.
  *
  * @param {Array}   monthly  — [{ label, income, expense, net }]
+ * @param {string}  currency — ISO 4217 display currency code
  * @param {boolean} loading
  */
-export default function TrendChart({ monthly = [], loading = false }) {
+export default function TrendChart({ monthly = [], currency = 'USD', loading = false }) {
+  const fmt     = (n) => formatCurrencyCompact(n, currency);
+  const sym     = getCurrency(currency).symbol;
+  const fmtAxis = (v) => {
+    if (v === 0) return `${sym}0`;
+    if (v >= 1000) return `${sym}${(v / 1000).toFixed(0)}k`;
+    return `${sym}${v}`;
+  };
   const chartData = useMemo(() => ({
     labels: monthly.map((m) => m.label),
     datasets: [

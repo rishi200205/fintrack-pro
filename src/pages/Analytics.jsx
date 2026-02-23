@@ -3,13 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTransactions, selectTransactionStatus } from '../store/slices/transactionSlice';
 import { fetchCategories,   selectCategoriesStatus }   from '../store/slices/categorySlice';
 import { useAnalyticsPage }       from '../hooks/useAnalyticsPage';
+import { formatCurrencyCompact }  from '../utils/currency';
 import InsightCard                from '../components/analytics/InsightCard';
 import TrendChart                 from '../components/analytics/TrendChart';
 import CategoryBreakdown          from '../components/analytics/CategoryBreakdown';
 import './Analytics.css';
-
-const fmt = (n) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 
 const PERIODS = [
   { label: '1M', value: 1  },
@@ -44,7 +42,10 @@ export default function Analytics() {
     worstMonth,
     avgMonthlyExpense,
     txnCount,
+    displayCurrency,
   } = useAnalyticsPage(period);
+
+  const fmt = (n) => formatCurrencyCompact(n, displayCurrency);
 
   const netTrend =
     netSavings > 0 ? 'up'  :
@@ -126,7 +127,7 @@ export default function Analytics() {
           <h2 className="analytics-page__card-title">Income vs Expenses</h2>
           <span className="analytics-page__card-meta">{txnCount} transaction{txnCount !== 1 ? 's' : ''}</span>
         </div>
-        <TrendChart monthly={monthly} loading={loading} />
+        <TrendChart monthly={monthly} currency={displayCurrency} loading={loading} />
       </div>
 
       {/* ── Bottom row ── */}
@@ -140,6 +141,7 @@ export default function Analytics() {
           <CategoryBreakdown
             expByCategory={expByCategory}
             incByCategory={incByCategory}
+            currency={displayCurrency}
             loading={loading}
           />
         </div>

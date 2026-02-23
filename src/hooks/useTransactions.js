@@ -11,6 +11,8 @@ import {
   removeTransaction,
 } from '../store/slices/transactionSlice';
 import { selectCategories } from '../store/slices/categorySlice';
+import { selectCurrency } from '../store/slices/uiSlice';
+import { convertAmount } from '../utils/currency';
 
 /**
  * useTransactions — derived, filtered and sorted transaction list with
@@ -22,6 +24,7 @@ export function useTransactions() {
   const categories = useSelector(selectCategories);
   const filters    = useSelector(selectFilters);
   const status     = useSelector(selectTransactionStatus);
+  const displayCurrency = useSelector(selectCurrency);
 
   // ── Enrich with category object ──────────────────────────────────────────
   const enriched = useMemo(() => {
@@ -63,15 +66,16 @@ export function useTransactions() {
     });
   }, [enriched, filters]);
 
-  // ── Summary stats for the active filter view ─────────────────────────────
+  // ── Summary stats for the active filter view (converted to display currency) ──────────
   const stats = useMemo(() => {
     let income = 0, expense = 0;
     for (const t of filtered) {
-      if (t.type === 'income')  income  += t.amount;
-      else                       expense += t.amount;
+      const converted = convertAmount(t.amount, t.currency ?? 'USD', displayCurrency);
+      if (t.type === 'income')  income  += converted;
+      else                       expense += converted;
     }
-    return { income, expense, net: income - expense, count: filtered.length };
-  }, [filtered]);
+    return { income, expense, net: income - expense, count: filtered.length, displayCurrency };
+  }, [filtered, displayCurrency]);
 
   // ── Active filter count (for badge) ──────────────────────────────────────
   const activeFilters = useMemo(() => {

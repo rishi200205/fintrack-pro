@@ -64,25 +64,19 @@ export default function Login() {
   const serverError = useSelector(selectAuthError);
   const isLoggedIn  = useSelector(selectIsLoggedIn);
 
-  const [fields, setFields]     = useState({ email: '', password: '' });
+  const [fields, setFields]     = useState(() => {
+    const saved = localStorage.getItem('ft_remember_email');
+    return { email: saved ?? '', password: '' };
+  });
   const [errors, setErrors]     = useState({});
   const [showPwd, setShowPwd]   = useState(false);
-  const [remember, setRemember] = useState(false);
+  const [remember, setRemember] = useState(() => !!localStorage.getItem('ft_remember_email'));
   const [touched, setTouched]   = useState({});
 
   // Auto-redirect if already authenticated
   useEffect(() => {
     if (isLoggedIn) navigate('/dashboard', { replace: true });
   }, [isLoggedIn, navigate]);
-
-  // Pre-fill email if "remember me" was set previously
-  useEffect(() => {
-    const saved = localStorage.getItem('ft_remember_email');
-    if (saved) {
-      setFields((f) => ({ ...f, email: saved }));
-      setRemember(true);
-    }
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

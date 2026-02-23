@@ -1,0 +1,292 @@
+/* ============================================================
+   Analytics page
+   ============================================================ */
+
+.analytics-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Header ── */
+.analytics-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.analytics-page__title {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.analytics-page__sub {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ── Period tabs ── */
+.analytics-page__period-tabs {
+  display: flex;
+  gap: var(--space-1);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 3px;
+}
+
+.analytics-page__period-btn {
+  padding: var(--space-1) var(--space-3);
+  border: none;
+  border-radius: calc(var(--radius-md) - 2px);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-width: 40px;
+}
+
+.analytics-page__period-btn:hover:not(.analytics-page__period-btn--active) {
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+}
+
+.analytics-page__period-btn--active {
+  background: var(--color-primary-600);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ── KPI strip ── */
+.analytics-page__kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+/* ── Cards ── */
+.analytics-page__card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.analytics-page__card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.analytics-page__card-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.analytics-page__card-meta {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ── Bottom row ── */
+.analytics-page__bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: var(--space-5);
+  align-items: stretch;
+}
+
+.analytics-page__card--breakdown {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Monthly table ── */
+.analytics-page__table-wrap {
+  overflow-x: auto;
+}
+
+.analytics-page__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.analytics-page__table thead th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0 var(--space-2) var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+  white-space: nowrap;
+}
+
+.analytics-page__th--right {
+  text-align: right !important;
+}
+
+.analytics-page__tr {
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background var(--transition-fast);
+}
+
+.analytics-page__tr:last-of-type {
+  border-bottom: none;
+}
+
+.analytics-page__tr:hover {
+  background: var(--bg-elevated);
+}
+
+.analytics-page__table td {
+  padding: var(--space-2) var(--space-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.analytics-page__td-month {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.analytics-page__td-income {
+  text-align: right;
+  color: #22c55e;
+  font-weight: 500;
+}
+
+.analytics-page__td-expense {
+  text-align: right;
+  color: #f87171;
+  font-weight: 500;
+}
+
+.analytics-page__td-net {
+  text-align: right;
+  font-weight: 600;
+}
+
+.analytics-page__td-net--pos { color: #22c55e; }
+.analytics-page__td-net--neg { color: #f87171; }
+
+.analytics-page__tfoot-row {
+  border-top: 2px solid var(--border-default) !important;
+}
+
+.analytics-page__tfoot-row td {
+  font-weight: 700;
+  padding-top: var(--space-3);
+  color: var(--text-primary);
+}
+
+.analytics-page__tfoot-val {
+  font-weight: 700 !important;
+}
+
+/* ── Table skeleton ── */
+.analytics-page__table-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.analytics-page__table-empty {
+  text-align: center;
+  padding: var(--space-6);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* ── Best / Worst callouts ── */
+.analytics-page__callouts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.analytics-page__callout {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+}
+
+.analytics-page__callout--best {
+  background: rgba(34, 197, 94, 0.06);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.analytics-page__callout--worst {
+  background: rgba(248, 113, 113, 0.06);
+  border-color: rgba(248, 113, 113, 0.2);
+}
+
+.analytics-page__callout-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.analytics-page__callout-month {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.analytics-page__callout--best  .analytics-page__callout-val { color: #22c55e; font-weight: 700; font-size: var(--text-sm); }
+.analytics-page__callout--worst .analytics-page__callout-val { color: #f87171; font-weight: 700; font-size: var(--text-sm); }
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+  .analytics-page__kpi-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .analytics-page__bottom-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .analytics-page {
+    padding: var(--space-4);
+    gap: var(--space-4);
+  }
+  .analytics-page__kpi-strip {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+  }
+  .analytics-page__header {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .analytics-page__callouts {
+    grid-template-columns: 1fr;
+  }
+}

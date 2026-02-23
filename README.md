@@ -41,9 +41,10 @@ and the theme preference is saved to `localStorage`.
 
 **Key highlights:**
 
-- 100% custom CSS  no Tailwind, no UI component library
+- 100% custom CSS — no Tailwind, no UI component library
 - Full CRUD for transactions with search, filter, and sort
 - Custom category creator with emoji + color picker, live across all pages
+- **Multi-currency support** — 10 currencies, mock exchange rates, real-time conversion across all views
 - Interactive charts (Line, Doughnut, Bar) with hover tooltips
 - Dark & light themes switchable from the topbar or Settings page
 - CSV export, toast notification system, responsive mobile layout
@@ -61,10 +62,12 @@ and the theme preference is saved to `localStorage`.
 ###  Transactions
 - Add, edit, and delete transactions via modal form
 - Income / expense type toggle with filtered category lists
+- **Per-transaction currency selector** — 10 currencies (USD, EUR, GBP, INR, JPY, CAD, AUD, CHF, CNY, MXN)
+- Each transaction stores its original currency; amounts convert to the display currency everywhere
 - Real-time search by description
 - Filters: type, category, date range
 - Sortable columns: date, amount, category
-- **Inline custom category creator**  pick emoji icon + color swatch, auto-selects on create
+- **Inline custom category creator** — pick emoji icon + color swatch, auto-selects on create
 
 ###  Budgets
 - Set per-category monthly / weekly budget limits
@@ -80,10 +83,11 @@ and the theme preference is saved to `localStorage`.
 - Insight callouts: best month, worst month, average spend, transaction count
 
 ###  Settings
-- **Appearance**  Dark / Light theme toggle with mini UI preview swatches
-- **Profile**  Displays logged-in user name and email with initials avatar
-- **Data & Export**  Download all transactions as a `.csv` file
-- **Account**  Sign out with redirect to login
+- **Appearance** — Dark / Light theme toggle with mini UI preview swatches
+- **Currency** — Pick from 10 display currencies; all totals, KPI cards, and charts update instantly using mock exchange rates
+- **Profile** — Displays logged-in user name and email with initials avatar
+- **Data & Export** — Download all transactions as a `.csv` file
+- **Account** — Sign out with redirect to login
 
 ###  Toast Notifications
 - Global system driven by Redux (`uiSlice.toasts`)
@@ -109,7 +113,7 @@ and the theme preference is saved to `localStorage`.
 | HTTP        | Axios + `axios-mock-adapter`                                            |
 | Styling     | Plain CSS with custom properties  no UI library, no Tailwind           |
 | Linting     | ESLint with `react-hooks` + `react-refresh` plugins                     |
-| Persistence | `localStorage`  auth token, user, theme preference                     |
+| Persistence | `localStorage` — auth token, user, theme preference, display currency  |
 
 ---
 
@@ -223,6 +227,7 @@ fintrack-pro/
    
     utils/
         exportCsv.js              # Builds and triggers CSV download
+        currency.js               # 10 currencies, mock rates, convertAmount, formatCurrency
 
  index.html
  vite.config.js
@@ -236,22 +241,22 @@ fintrack-pro/
 
 ### Routes
 
-| Route           | Component      | Access    | Description                              |
-|-----------------|----------------|-----------|------------------------------------------|
-| `/`             | Login          | Guest     | Email + password, remember-me, demo hint |
-| `/signup`       | Signup         | Guest     | Registration UI (mock only)              |
-| `/dashboard`    | Dashboard      | Protected | Overview KPIs, charts, recent activity   |
-| `/transactions` | Transactions   | Protected | Full transaction management              |
-| `/budgets`      | Budget         | Protected | Per-category budget tracking             |
-| `/analytics`    | Analytics      | Protected | Period-based deep-dive analysis          |
-| `/settings`     | Settings       | Protected | Theme, profile, export, sign-out         |
+| Route           | Component      | Access    | Description                                        |
+|-----------------|----------------|-----------|----------------------------------------------------|
+| `/`             | Login          | Guest     | Email + password, remember-me, demo hint           |
+| `/signup`       | Signup         | Guest     | Registration UI (mock only)                        |
+| `/dashboard`    | Dashboard      | Protected | Overview KPIs, charts, recent activity             |
+| `/transactions` | Transactions   | Protected | Full transaction management with per-txn currency  |
+| `/budgets`      | Budget         | Protected | Per-category budget tracking                       |
+| `/analytics`    | Analytics      | Protected | Period-based deep-dive analysis                    |
+| `/settings`     | Settings       | Protected | Theme, currency, profile, export, sign-out         |
 
 ### Key Component Responsibilities
 
 | Component           | Responsibility                                                      |
 |---------------------|---------------------------------------------------------------------|
 | `Layout`            | App shell  sidebar nav, topbar with theme toggle, mobile bottom nav |
-| `TransactionForm`   | Add/edit modal + inline custom category creator (emoji + color)     |
+| `TransactionForm`   | Add/edit modal, per-transaction currency selector, inline custom category creator |
 | `ToastContainer`    | Reads `ui.toasts[]` from Redux, renders self-dismissing toasts      |
 | `TrendChart`        | Chart.js Line  three overlapping datasets, custom tooltips         |
 | `CategoryBreakdown` | Per-period doughnut + top-3 highlights + full category tile grid    |
@@ -283,14 +288,17 @@ Redux Store
 
  ui
      theme ('dark' | 'light')
+     currency (ISO 4217 code, e.g. 'USD', 'EUR')
      toasts[]
      sidebarOpen
-     actions: toggleTheme, addToast, removeToast, openModal, closeModal
+     actions: toggleTheme, setCurrency, addToast, removeToast, openModal, closeModal
 ```
 
-**Theme**  `toggleTheme()` updates `localStorage` and sets `data-theme` on `<html>` directly inside the Redux reducer, no React `useEffect` needed.
+**Theme** — `toggleTheme()` updates `localStorage` and sets `data-theme` on `<html>` directly inside the Redux reducer, no React `useEffect` needed.
 
-**Custom categories**  `createCategory` thunk fires `POST /categories`, receives the new object, and appends it to `state.categories.items`. Because all pages read from the same slice, the new category is instantly available in Analytics, Budget selects, and Transaction filters.
+**Currency** — `setCurrency(code)` persists the code to `localStorage`. Every computed value in `useAnalytics`, `useAnalyticsPage`, and `useTransactions` calls `convertAmount(t.amount, t.currency, displayCurrency)` before aggregating, so all KPI cards, charts, and table values always reflect the chosen currency.
+
+**Custom categories** — `createCategory` thunk fires `POST /categories`, receives the new object, and appends it to `state.categories.items`. Because all pages read from the same slice, the new category is instantly available in Analytics, Budget selects, and Transaction filters.
 
 ---
 

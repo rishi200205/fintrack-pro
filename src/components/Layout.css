@@ -297,6 +297,65 @@
 }
 
 /* ===================================================
+   LIGHT THEME — Sidebar overrides
+   The sidebar intentionally stays dark in light mode
+   (--sidebar-bg: #1e293b). We need to pin all inherited
+   variables that flipped to light values back to
+   dark-appropriate equivalents.
+   =================================================== */
+[data-theme="light"] .sidebar {
+  border-right-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .sidebar__logo {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .sidebar__logo-name {
+  color: #f1f5f9;
+}
+
+[data-theme="light"] .sidebar__nav-item {
+  color: #94a3b8;
+}
+
+[data-theme="light"] .sidebar__nav-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #f1f5f9;
+}
+
+[data-theme="light"] .sidebar__nav-item--active {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+}
+
+[data-theme="light"] .sidebar__nav-item--active:hover {
+  background: rgba(59, 130, 246, 0.27);
+  color: #93c5fd;
+}
+
+[data-theme="light"] .sidebar__footer {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .sidebar__user-name {
+  color: #f1f5f9;
+}
+
+[data-theme="light"] .sidebar__user-email {
+  color: #94a3b8;
+}
+
+[data-theme="light"] .sidebar__logout {
+  color: #64748b;
+}
+
+[data-theme="light"] .sidebar__logout:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+
+/* ===================================================
    RESPONSIVE
    =================================================== */
 @media (max-width: 767px) {

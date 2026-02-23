@@ -5,9 +5,9 @@
 .cat-breakdown {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
   flex: 1;
-  min-height: 0;
+  justify-content: space-between;
 }
 
 /* ── Type toggle ── */
@@ -54,20 +54,27 @@
   color: #22c55e;
 }
 
-/* ── Main layout: donut left, list right ── */
+/* ── Main layout: top row + grid below ── */
 .cat-breakdown__content {
   display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ── Top row: donut left, top-3 right ── */
+.cat-breakdown__top {
+  display: flex;
+  align-items: center;
   gap: var(--space-5);
-  align-items: flex-start;
-  flex: 1;
 }
 
 /* ── Doughnut ── */
 .cat-breakdown__donut-wrap {
   position: relative;
-  width: 180px;
-  height: 180px;
+  width: 160px;
+  height: 160px;
   flex-shrink: 0;
+  align-self: center;
 }
 
 .cat-breakdown__center {
@@ -102,31 +109,153 @@
   color: var(--text-muted);
 }
 
-/* ── Ranked list ── */
-.cat-breakdown__list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* ── Top-3 highlights column ── */
+.cat-breakdown__highlights {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
   flex: 1;
   min-width: 0;
 }
 
-.cat-breakdown__item {
+.cat-breakdown__highlight {
   display: flex;
   align-items: center;
   gap: var(--space-2);
 }
 
-.cat-breakdown__rank {
-  font-size: 10px;
+.cat-breakdown__highlight-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+}
+
+.cat-breakdown__highlight-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cat-breakdown__highlight-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.cat-breakdown__highlight-name {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cat-breakdown__highlight-amt {
+  font-size: var(--text-xs);
   font-weight: 700;
-  color: var(--text-muted);
-  width: 14px;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.cat-breakdown__highlight-pct {
+  font-size: 11px;
+  font-weight: 700;
+  width: 34px;
   text-align: right;
   flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Divider between top and grid ── */
+.cat-breakdown__content > .cat-breakdown__grid {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--space-3);
+}
+
+/* ── Category tiles grid ── */
+.cat-breakdown__grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-2);
+}
+
+.cat-breakdown__tile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  transition: border-color var(--transition-fast);
+}
+
+.cat-breakdown__tile:hover {
+  border-color: var(--border-default);
+}
+
+.cat-breakdown__tile-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+}
+
+.cat-breakdown__tile-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cat-breakdown__tile-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.cat-breakdown__tile-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cat-breakdown__tile-pct {
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.cat-breakdown__tile-amt {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .cat-breakdown__icon {

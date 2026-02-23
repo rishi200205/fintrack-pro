@@ -119,38 +119,65 @@ export default function CategoryBreakdown({
         </div>
       ) : (
         <div className="cat-breakdown__content">
-          {/* ── Doughnut ── */}
-          <div className="cat-breakdown__donut-wrap">
-            <Doughnut data={chartData} options={options} />
-            <div className="cat-breakdown__center">
-              <span className="cat-breakdown__center-label">
-                {mode === 'expense' ? 'Spent' : 'Earned'}
-              </span>
-              <span className="cat-breakdown__center-value">{fmt(total)}</span>
-              <span className="cat-breakdown__center-sub">{items.length} categories</span>
+          {/* ── Top row: donut + summary stats ── */}
+          <div className="cat-breakdown__top">
+            <div className="cat-breakdown__donut-wrap">
+              <Doughnut data={chartData} options={options} />
+              <div className="cat-breakdown__center">
+                <span className="cat-breakdown__center-label">
+                  {mode === 'expense' ? 'Spent' : 'Earned'}
+                </span>
+                <span className="cat-breakdown__center-value">{fmt(total)}</span>
+                <span className="cat-breakdown__center-sub">{items.length} categories</span>
+              </div>
             </div>
-          </div>
 
-          {/* ── Ranked list ── */}
-          <ul className="cat-breakdown__list">
-            {items.map((cat, idx) => {
-              const share = pct(cat.value, total);
-              return (
-                <li key={cat.id} className="cat-breakdown__item">
-                  <span className="cat-breakdown__rank">{idx + 1}</span>
+            {/* top 3 highlight pills */}
+            <div className="cat-breakdown__highlights">
+              {items.slice(0, 3).map((cat, idx) => (
+                <div key={cat.id} className="cat-breakdown__highlight">
                   <span
-                    className="cat-breakdown__icon"
-                    style={{
-                      background: `${cat.color}22`,
-                      borderColor: `${cat.color}44`,
-                    }}
+                    className="cat-breakdown__highlight-icon"
+                    style={{ background: `${cat.color}22`, borderColor: `${cat.color}55` }}
                   >
                     {cat.icon}
                   </span>
-                  <div className="cat-breakdown__info">
-                    <div className="cat-breakdown__row">
-                      <span className="cat-breakdown__name">{cat.name}</span>
-                      <span className="cat-breakdown__amt">{fmt(cat.value)}</span>
+                  <div className="cat-breakdown__highlight-body">
+                    <div className="cat-breakdown__highlight-row">
+                      <span className="cat-breakdown__highlight-name">{cat.name}</span>
+                      <span className="cat-breakdown__highlight-amt">{fmt(cat.value)}</span>
+                    </div>
+                    <div className="cat-breakdown__bar-track">
+                      <div
+                        className="cat-breakdown__bar-fill"
+                        style={{ width: `${pct(cat.value, total)}%`, background: cat.color }}
+                      />
+                    </div>
+                  </div>
+                  <span className="cat-breakdown__highlight-pct" style={{ color: cat.color }}>
+                    {pct(cat.value, total)}%
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Grid: remaining categories ── */}
+          <ul className="cat-breakdown__grid">
+            {items.map((cat) => {
+              const share = pct(cat.value, total);
+              return (
+                <li key={cat.id} className="cat-breakdown__tile">
+                  <span
+                    className="cat-breakdown__tile-icon"
+                    style={{ background: `${cat.color}22`, borderColor: `${cat.color}44` }}
+                  >
+                    {cat.icon}
+                  </span>
+                  <div className="cat-breakdown__tile-body">
+                    <div className="cat-breakdown__tile-row">
+                      <span className="cat-breakdown__tile-name">{cat.name}</span>
+                      <span className="cat-breakdown__tile-pct" style={{ color: cat.color }}>{share}%</span>
                     </div>
                     <div className="cat-breakdown__bar-track">
                       <div
@@ -158,10 +185,8 @@ export default function CategoryBreakdown({
                         style={{ width: `${share}%`, background: cat.color }}
                       />
                     </div>
+                    <span className="cat-breakdown__tile-amt">{fmt(cat.value)}</span>
                   </div>
-                  <span className="cat-breakdown__pct" style={{ color: cat.color }}>
-                    {share}%
-                  </span>
                 </li>
               );
             })}

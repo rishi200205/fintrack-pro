@@ -135,9 +135,6 @@ export default function Budget() {
           {unbudgeted.length > 0 && (
             <section className="budget-page__section">
               <h2 className="budget-page__section-title">Set a Budget</h2>
-              <p className="budget-page__section-sub">
-                These expense categories don't have a monthly limit yet.
-              </p>
               <div className="budget-page__unbudgeted">
                 {unbudgeted.map((cat) => (
                   <button

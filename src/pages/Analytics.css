@@ -112,11 +112,12 @@
   display: grid;
   grid-template-columns: 1fr 360px;
   gap: var(--space-5);
-  align-items: start;
+  align-items: stretch;
 }
 
 .analytics-page__card--breakdown {
-  min-height: 340px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Monthly table ── */

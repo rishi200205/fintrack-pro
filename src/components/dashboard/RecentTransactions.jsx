@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { formatCurrency } from '../../utils/currency';
+import { formatCurrency, convertAmount } from '../../utils/currency';
 import './RecentTransactions.css';
 
 const fmtDate = (iso) => {
@@ -12,7 +12,7 @@ const fmtDate = (iso) => {
  * @param {Array}   transactions — enriched with `.category`
  * @param {boolean} loading
  */
-export default function RecentTransactions({ transactions = [], loading = false }) {
+export default function RecentTransactions({ transactions = [], loading = false, currency = 'USD' }) {
   if (loading) {
     return (
       <ul className="recent-txns">
@@ -64,7 +64,7 @@ export default function RecentTransactions({ transactions = [], loading = false 
 
             {/* Amount */}
             <span className={`recent-txns__amount ${isIncome ? 'recent-txns__amount--income' : 'recent-txns__amount--expense'}`}>
-              {isIncome ? '+' : '-'}{formatCurrency(txn.amount, txn.currency ?? 'USD')}
+              {isIncome ? '+' : '-'}{formatCurrency(convertAmount(txn.amount, txn.currency ?? 'USD', currency), currency)}
             </span>
           </li>
         );

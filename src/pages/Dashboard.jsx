@@ -99,7 +99,7 @@ export default function Dashboard() {
         }
         padding="md"
       >
-        <RecentTransactions transactions={recent} loading={loading} />
+        <RecentTransactions transactions={recent} currency={displayCurrency} loading={loading} />
       </Card>
     </div>
   );
